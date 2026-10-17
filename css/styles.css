@@ -1,0 +1,402 @@
+/* =========================================================
+   Calculadora de Alambrados - estilos
+   Paleta verde / cálida, mobile first.
+   ========================================================= */
+
+:root {
+  /* Paleta */
+  --verde-oscuro: #2E5E3E;
+  --verde-medio: #4C8C4A;
+  --verde-claro: #A8C686;
+  --tierra: #8B6B3E;
+  --crema: #F6F3E9;
+  --texto: #1F2A22;
+  --alerta: #C8782A;
+
+  --blanco: #ffffff;
+  --borde: rgba(31, 42, 34, 0.12);
+  --sombra-suave: 0 4px 14px rgba(31, 42, 34, 0.12);
+  --sombra-fuerte: 0 8px 26px rgba(31, 42, 34, 0.24);
+
+  --radio: 14px;
+  --radio-chico: 10px;
+
+  --alto-topbar: 56px;
+  --alto-panel: 48dvh;
+  --ancho-panel: 380px;
+
+  --fuente: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--fuente);
+  color: var(--texto);
+  background: var(--crema);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+.app {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* =========================================================
+   Barra superior
+   ========================================================= */
+
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1200;
+  height: var(--alto-topbar);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 14px;
+  padding-top: env(safe-area-inset-top, 0);
+  background: var(--verde-oscuro);
+  color: var(--crema);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.marca-icono { font-size: 1.25rem; line-height: 1; }
+
+.marca-titulo {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.marca-sub {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--verde-claro);
+  white-space: nowrap;
+}
+
+/* =========================================================
+   Mapa
+   ========================================================= */
+
+.mapa {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--verde-claro);
+}
+
+/* Los controles de Leaflet no deben quedar tapados por la barra superior */
+.leaflet-top { top: var(--alto-topbar); }
+.leaflet-control-attribution { font-size: 10px; }
+
+/* Puntos y líneas (se usarán en la Fase 3) */
+.punto-alambre {
+  background: var(--blanco);
+  border: 3px solid var(--verde-oscuro);
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.etiqueta-tramo {
+  background: var(--crema);
+  color: var(--texto);
+  border: 1px solid var(--verde-oscuro);
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-weight: 700;
+  font-size: 0.72rem;
+  white-space: nowrap;
+  box-shadow: var(--sombra-suave);
+}
+
+/* =========================================================
+   Barra de herramientas
+   ========================================================= */
+
+.barra-herramientas {
+  position: absolute;
+  top: calc(var(--alto-topbar) + 10px);
+  left: 10px;
+  right: 10px;
+  z-index: 1150;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.barra-herramientas::-webkit-scrollbar { display: none; }
+
+.btn-herramienta {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 16px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--verde-oscuro);
+  background: var(--blanco);
+  border: 1.5px solid var(--borde);
+  border-radius: 22px;
+  box-shadow: var(--sombra-suave);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+
+.btn-herramienta:hover { background: var(--verde-claro); }
+
+.btn-herramienta:active { transform: scale(0.97); }
+
+.btn-herramienta[aria-pressed="true"] {
+  background: var(--verde-oscuro);
+  color: var(--crema);
+  border-color: var(--verde-oscuro);
+}
+
+.btn-herramienta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   Panel
+   ========================================================= */
+
+.panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1100;
+  height: var(--alto-panel);
+  display: flex;
+  flex-direction: column;
+  background: var(--crema);
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  box-shadow: var(--sombra-fuerte);
+}
+
+.panel-asa {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 5px;
+  margin: 8px auto 2px;
+  border-radius: 3px;
+  background: var(--verde-claro);
+}
+
+.panel-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 6px 14px 14px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Secciones plegables */
+.seccion {
+  border-bottom: 1px solid var(--borde);
+  padding: 4px 0 10px;
+}
+
+.seccion-titulo {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 6px 2px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--verde-oscuro);
+}
+.seccion-titulo::-webkit-details-marker { display: none; }
+
+.seccion-titulo::after {
+  content: "▸";
+  font-size: 0.9rem;
+  color: var(--tierra);
+  transition: transform 0.15s ease;
+}
+
+.seccion[open] > .seccion-titulo::after { transform: rotate(90deg); }
+
+.seccion-cuerpo { padding-top: 6px; }
+
+/* Rejilla de resultados */
+.rejilla-datos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.dato {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-left: 4px solid var(--verde-medio);
+  border-radius: var(--radio-chico);
+}
+
+.dato-etiqueta {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--tierra);
+}
+
+.dato-valor {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--verde-oscuro);
+}
+
+.dato-valor small { font-size: 0.8rem; font-weight: 600; }
+
+.dato-unidad {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(31, 42, 34, 0.55);
+}
+
+.detalle-postes,
+.costo {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto);
+}
+
+.costo {
+  padding: 8px 12px;
+  background: var(--verde-claro);
+  border-radius: var(--radio-chico);
+}
+
+/* Estados y notas */
+.estado-vacio {
+  margin: 14px 2px 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(31, 42, 34, 0.6);
+  text-align: center;
+}
+
+.nota {
+  margin: 6px 2px;
+  font-size: 0.85rem;
+  color: rgba(31, 42, 34, 0.75);
+}
+
+/* Botones de acción */
+.acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn {
+  flex: 1 1 0;
+  min-height: 46px;
+  padding: 0 16px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--crema);
+  background: var(--verde-oscuro);
+  border: none;
+  border-radius: var(--radio-chico);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn:hover { background: var(--verde-medio); }
+
+.btn-secundario {
+  color: var(--verde-oscuro);
+  background: var(--blanco);
+  border: 1.5px solid var(--verde-oscuro);
+}
+
+.btn-secundario:hover { background: var(--verde-claro); }
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover { background: var(--verde-oscuro); }
+.btn-secundario:disabled:hover { background: var(--blanco); }
+
+/* Aviso fijo */
+.aviso-medicion {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 0));
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--tierra);
+  background: rgba(139, 107, 62, 0.1);
+  border-top: 1px solid var(--borde);
+}
+
+/* =========================================================
+   Escritorio: barra lateral izquierda
+   ========================================================= */
+
+@media (min-width: 900px) {
+  .topbar { padding-left: 18px; padding-right: 18px; }
+
+  .panel {
+    top: var(--alto-topbar);
+    bottom: 0;
+    right: auto;
+    width: var(--ancho-panel);
+    height: auto;
+    border-radius: 0;
+    border-top: none;
+    border-right: 1px solid var(--borde);
+  }
+
+  .panel-asa { display: none; }
+
+  .panel-scroll { padding-top: 14px; }
+
+  .mapa { left: var(--ancho-panel); }
+
+  .barra-herramientas {
+    left: calc(var(--ancho-panel) + 12px);
+    right: 12px;
+  }
+
+  .rejilla-datos { grid-template-columns: repeat(2, 1fr); }
+}
