@@ -36,9 +36,13 @@ AL.map = (function () {
     mapa = L.map("map", {
       center: [cfg.centro.lat, cfg.centro.lng],
       zoom: cfg.centro.zoom,
-      zoomControl: true,
-      attributionControl: true
+      zoomControl: false,
+      attributionControl: false
     });
+
+    // Controles abajo para no chocar con la barra de herramientas
+    L.control.zoom({ position: "bottomright" }).addTo(mapa);
+    L.control.attribution({ position: "bottomleft", prefix: false }).addTo(mapa);
 
     capas.satelite = L.tileLayer(cfg.capas.satelite.url, {
       attribution: cfg.capas.satelite.atribucion,
@@ -120,9 +124,13 @@ AL.map = (function () {
   function agregarEtiqueta(a, b, metros) {
     const lat = (a[0] + b[0]) / 2;
     const lng = (a[1] + b[1]) / 2;
+    // El div externo queda de 0x0; el texto se centra con CSS adentro
+    // (no se puede usar transform en el div porque Leaflet lo usa para posicionar).
     const icono = L.divIcon({
-      className: "etiqueta-tramo",
-      html: formatoMetros(metros)
+      className: "etiqueta-tramo-wrap",
+      html: '<span class="etiqueta-tramo">' + formatoMetros(metros) + "</span>",
+      iconSize: [0, 0],
+      iconAnchor: [0, 0]
     });
     capaTramos.addLayer(L.marker([lat, lng], { icon: icono, interactive: false }));
   }

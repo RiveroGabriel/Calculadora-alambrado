@@ -1,6 +1,6 @@
 /* =========================================================
    Calculadora de Alambrados - estilos
-   Paleta verde / cálida, mobile first.
+   Paleta verde / cálida, mobile first (360 px).
    ========================================================= */
 
 :root {
@@ -15,14 +15,14 @@
 
   --blanco: #ffffff;
   --borde: rgba(31, 42, 34, 0.12);
-  --sombra-suave: 0 4px 14px rgba(31, 42, 34, 0.12);
-  --sombra-fuerte: 0 8px 26px rgba(31, 42, 34, 0.24);
+  --sombra-suave: 0 4px 14px rgba(31, 42, 34, 0.14);
+  --sombra-fuerte: 0 8px 26px rgba(31, 42, 34, 0.26);
 
   --radio: 14px;
   --radio-chico: 10px;
 
   --alto-topbar: 56px;
-  --alto-panel: 48dvh;
+  --alto-panel: 64dvh;
   --ancho-panel: 380px;
 
   --fuente: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
@@ -30,7 +30,11 @@
 
 * { box-sizing: border-box; }
 
-html, body { height: 100%; }
+html, body {
+  height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
 
 body {
   margin: 0;
@@ -41,8 +45,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Contenedor principal: altura definida = 100dvh (Leaflet lo necesita) */
 .app {
   position: relative;
+  width: 100%;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
@@ -107,26 +113,40 @@ body {
   background: var(--verde-claro);
 }
 
-/* Los controles de Leaflet no deben quedar tapados por la barra superior */
-.leaflet-top { top: var(--alto-topbar); }
+/* Controles de Leaflet abajo, por encima de la hoja colapsada */
+.leaflet-bottom { bottom: calc(112px + env(safe-area-inset-bottom, 0px)); }
 .leaflet-control-attribution { font-size: 10px; }
 
-/* Puntos y líneas (se usarán en la Fase 3) */
+/* Punto de medición: círculo blanco con borde verde oscuro */
 .punto-alambre {
   background: var(--blanco);
   border: 3px solid var(--verde-oscuro);
   border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.45);
+  cursor: grab;
 }
+.punto-alambre:active { cursor: grabbing; }
 
+/* Etiqueta con los metros del tramo.
+   El div externo mide 0x0 (Leaflet lo posiciona con su transform);
+   el span interno se centra sobre el punto. */
+.etiqueta-tramo-wrap {
+  background: transparent;
+  border: none;
+}
 .etiqueta-tramo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
   background: var(--crema);
   color: var(--texto);
-  border: 1px solid var(--verde-oscuro);
+  border: 1.5px solid var(--verde-oscuro);
   border-radius: 6px;
   padding: 1px 6px;
   font-weight: 700;
   font-size: 0.72rem;
+  line-height: 1.4;
   white-space: nowrap;
   box-shadow: var(--sombra-suave);
 }
@@ -142,19 +162,16 @@ body {
   right: 10px;
   z-index: 1150;
   display: flex;
+  flex-wrap: wrap;      /* sin scroll horizontal */
   gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 2px;
-  scrollbar-width: none;
 }
-.barra-herramientas::-webkit-scrollbar { display: none; }
 
 .btn-herramienta {
   flex: 0 0 auto;
   min-height: 44px;
-  padding: 0 16px;
+  padding: 0 14px;
   font-family: inherit;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: var(--verde-oscuro);
   background: var(--blanco);
@@ -166,7 +183,6 @@ body {
 }
 
 .btn-herramienta:hover { background: var(--verde-claro); }
-
 .btn-herramienta:active { transform: scale(0.97); }
 
 .btn-herramienta[aria-pressed="true"] {
@@ -190,30 +206,85 @@ body {
   right: 0;
   bottom: 0;
   z-index: 1100;
-  height: var(--alto-panel);
   display: flex;
   flex-direction: column;
+  max-height: var(--alto-panel);
   background: var(--crema);
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
   box-shadow: var(--sombra-fuerte);
 }
 
-.panel-asa {
+/* Encabezado del panel: siempre visible, abre/cierra la hoja */
+.panel-toggle {
+  position: relative;
   flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px 8px;
+  font-family: inherit;
+  text-align: left;
+  color: var(--texto);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.panel-asa {
   width: 44px;
   height: 5px;
-  margin: 8px auto 2px;
+  margin: 0 auto 4px;
   border-radius: 3px;
   background: var(--verde-claro);
 }
 
+.panel-toggle-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.panel-toggle-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.panel-toggle-titulo {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--verde-oscuro);
+}
+
+.panel-toggle-resumen {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(31, 42, 34, 0.65);
+}
+
+.panel-chevron {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  color: var(--tierra);
+  transition: transform 0.2s ease;
+}
+.panel.abierto .panel-chevron { transform: rotate(180deg); }
+
+/* Cuerpo del panel: oculto hasta que se abre la hoja */
 .panel-scroll {
+  display: none;
   flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
-  padding: 6px 14px 14px;
+  padding: 4px 14px 14px;
   -webkit-overflow-scrolling: touch;
 }
+.panel.abierto .panel-scroll { display: block; }
 
 /* Secciones plegables */
 .seccion {
@@ -241,7 +312,6 @@ body {
   color: var(--tierra);
   transition: transform 0.15s ease;
 }
-
 .seccion[open] > .seccion-titulo::after { transform: rotate(90deg); }
 
 .seccion-cuerpo { padding-top: 6px; }
@@ -273,13 +343,12 @@ body {
 }
 
 .dato-valor {
-  font-size: 1.6rem;
+  font-size: 1.55rem;
   font-weight: 800;
   line-height: 1.1;
   color: var(--verde-oscuro);
+  word-break: break-word;
 }
-
-.dato-valor small { font-size: 0.8rem; font-weight: 600; }
 
 .dato-unidad {
   font-size: 0.7rem;
@@ -309,6 +378,7 @@ body {
   color: rgba(31, 42, 34, 0.6);
   text-align: center;
 }
+.estado-vacio[hidden] { display: none; }
 
 .nota {
   margin: 6px 2px;
@@ -345,14 +415,9 @@ body {
   background: var(--blanco);
   border: 1.5px solid var(--verde-oscuro);
 }
-
 .btn-secundario:hover { background: var(--verde-claro); }
 
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn:disabled:hover { background: var(--verde-oscuro); }
 .btn-secundario:disabled:hover { background: var(--blanco); }
 
@@ -370,7 +435,7 @@ body {
 }
 
 /* =========================================================
-   Escritorio: barra lateral izquierda
+   Escritorio: barra lateral izquierda, panel siempre abierto
    ========================================================= */
 
 @media (min-width: 900px) {
@@ -381,15 +446,17 @@ body {
     bottom: 0;
     right: auto;
     width: var(--ancho-panel);
-    height: auto;
+    max-height: none;
     border-radius: 0;
     border-top: none;
     border-right: 1px solid var(--borde);
   }
 
+  .panel-toggle { pointer-events: none; cursor: default; }
   .panel-asa { display: none; }
+  .panel-chevron { display: none; }
 
-  .panel-scroll { padding-top: 14px; }
+  .panel-scroll { display: block; padding-top: 14px; }
 
   .mapa { left: var(--ancho-panel); }
 
@@ -398,5 +465,6 @@ body {
     right: 12px;
   }
 
-  .rejilla-datos { grid-template-columns: repeat(2, 1fr); }
+  /* En escritorio el panel no tapa la parte de abajo del mapa */
+  .leaflet-bottom { bottom: 0; }
 }

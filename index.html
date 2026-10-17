@@ -38,19 +38,29 @@
 
     <!-- ===== Barra de herramientas ===== -->
     <div class="barra-herramientas" role="toolbar" aria-label="Herramientas de medición">
-      <button class="btn-herramienta" type="button" data-accion="linea" aria-pressed="false">Línea</button>
-      <button class="btn-herramienta" type="button" data-accion="corral" aria-pressed="false">Corral</button>
-      <button class="btn-herramienta" type="button" data-accion="deshacer" disabled>Deshacer</button>
-      <button class="btn-herramienta" type="button" data-accion="limpiar" disabled>Limpiar</button>
+      <button class="btn-herramienta" type="button" id="btn-linea" aria-pressed="true">Línea</button>
+      <button class="btn-herramienta" type="button" id="btn-corral" aria-pressed="false">Corral</button>
+      <button class="btn-herramienta" type="button" id="btn-deshacer" disabled>Deshacer</button>
+      <button class="btn-herramienta" type="button" id="btn-limpiar" disabled>Limpiar</button>
       <button class="btn-herramienta" type="button" id="btn-ubicacion">Mi ubicación</button>
       <button class="btn-herramienta" type="button" id="btn-capas">Calles</button>
     </div>
 
     <!-- ===== Panel (hoja inferior en celular / barra lateral en escritorio) ===== -->
-    <section class="panel" aria-label="Panel de resultados">
-      <div class="panel-asa" aria-hidden="true"></div>
+    <section class="panel" id="panel" aria-label="Panel de resultados">
+      <button class="panel-toggle" type="button" id="panel-toggle"
+              aria-expanded="false" aria-controls="panel-scroll">
+        <span class="panel-asa" aria-hidden="true"></span>
+        <span class="panel-toggle-fila">
+          <span class="panel-toggle-info">
+            <span class="panel-toggle-titulo">Resultado</span>
+            <span class="panel-toggle-resumen" id="panel-resumen">Sin puntos aún</span>
+          </span>
+          <span class="panel-chevron" aria-hidden="true">▲</span>
+        </span>
+      </button>
 
-      <div class="panel-scroll">
+      <div class="panel-scroll" id="panel-scroll">
 
         <!-- Resultado -->
         <details class="seccion" id="seccion-resultado" open>
@@ -65,7 +75,7 @@
               <div class="dato">
                 <span class="dato-etiqueta">Superficie</span>
                 <span class="dato-valor" id="res-superficie">—</span>
-                <span class="dato-unidad">hectáreas</span>
+                <span class="dato-unidad" id="res-superficie-unidad">hectáreas</span>
               </div>
               <div class="dato">
                 <span class="dato-etiqueta">Alambre</span>
@@ -94,7 +104,7 @@
               </div>
               <div class="dato">
                 <span class="dato-etiqueta">Tranqueras</span>
-                <span class="dato-valor" id="res-tranqueras">—</span>
+                <span class="dato-valor" id="res-tranqueras">0</span>
                 <span class="dato-unidad">unidades</span>
               </div>
             </div>

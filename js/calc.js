@@ -174,8 +174,13 @@ AL.calc = (function () {
     const metrosPorGradoLat = (RADIO_TIERRA * Math.PI) / 180;
     const metrosPorGradoLng = metrosPorGradoLat * Math.cos(aRadianes(lat0));
 
-    const dLat = 250 / metrosPorGradoLat; // 250 m en latitud
-    const dLng = 400 / metrosPorGradoLng; // 400 m en longitud
+    // Margen mínimo en el ancho para que el redondeo de coordenadas no
+    // empuje el ceil de vanos por encima de 40 (evita 131/393 en vez de 130/390).
+    const metrosAlto = 250;
+    const metrosAncho = 399.9;
+
+    const dLat = metrosAlto / metrosPorGradoLat;  // 250 m en latitud
+    const dLng = metrosAncho / metrosPorGradoLng; // ~400 m en longitud
 
     const puntos = [
       [lat0, lng0],
