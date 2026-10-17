@@ -216,6 +216,12 @@ AL.map = (function () {
   function getCapaActual() { return capaActual; }
   function setAlCambiar(fn) { alCambiar = fn; }
 
+  // Recalcula el tamaño del mapa. Necesario tras abrir/cerrar el panel
+  // o al rotar el celular, para que Leaflet siga mapeando bien los toques.
+  function invalidarTamano() {
+    if (mapa) mapa.invalidateSize();
+  }
+
   return {
     iniciar: iniciar,
     agregarPunto: agregarPunto,
@@ -228,6 +234,7 @@ AL.map = (function () {
     getModo: getModo,
     getMapa: getMapa,
     getCapaActual: getCapaActual,
-    setAlCambiar: setAlCambiar
+    setAlCambiar: setAlCambiar,
+    invalidarTamano: invalidarTamano
   };
 })();

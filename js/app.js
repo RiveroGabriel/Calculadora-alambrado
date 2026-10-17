@@ -55,6 +55,9 @@ document.addEventListener("DOMContentLoaded", function () {
     toggle.addEventListener("click", function () {
       const abierto = panel.classList.toggle("abierto");
       toggle.setAttribute("aria-expanded", abierto ? "true" : "false");
+      // Recalcamos el tamaño del mapa luego de la animación
+      setTimeout(AL.map.invalidarTamano, 60);
+      setTimeout(AL.map.invalidarTamano, 360);
     });
   }
 
@@ -64,9 +67,18 @@ document.addEventListener("DOMContentLoaded", function () {
     btnCopiar.addEventListener("click", function () { AL.ui.copiarResumen(); });
   }
 
+  // 7) Rotar el celular o cambiar el tamaño de la ventana
+  window.addEventListener("resize", function () { AL.map.invalidarTamano(); });
+  window.addEventListener("orientationchange", function () {
+    setTimeout(AL.map.invalidarTamano, 300);
+  });
+
+  // Recalculo extra una vez que el layout se asentó
+  setTimeout(AL.map.invalidarTamano, 250);
+
   // Estado inicial del panel
   AL.ui.actualizar();
 
-  // 7) Prueba obligatoria por consola (Fase 4)
+  // 8) Prueba obligatoria por consola (Fase 4)
   if (AL.calc.testCalc) AL.calc.testCalc();
 });

@@ -115,7 +115,11 @@ body {
 
 /* Controles de Leaflet abajo, por encima de la hoja colapsada */
 .leaflet-bottom { bottom: calc(112px + env(safe-area-inset-bottom, 0px)); }
-.leaflet-control-attribution { font-size: 10px; }
+.leaflet-control-attribution {
+  font-size: 10px;
+  pointer-events: none;   /* no roba toques sobre el mapa... */
+}
+.leaflet-control-attribution a { pointer-events: auto; } /* ...salvo los links */
 
 /* Punto de medición: círculo blanco con borde verde oscuro */
 .punto-alambre {
@@ -162,8 +166,10 @@ body {
   right: 10px;
   z-index: 1150;
   display: flex;
-  flex-wrap: wrap;      /* sin scroll horizontal */
+  flex-wrap: wrap;        /* sin scroll horizontal */
   gap: 8px;
+  /* El contenedor NO debe comerse los toques en los huecos entre botones */
+  pointer-events: none;
 }
 
 .btn-herramienta {
@@ -179,6 +185,9 @@ body {
   border-radius: 22px;
   box-shadow: var(--sombra-suave);
   cursor: pointer;
+  pointer-events: auto;   /* solo los botones capturan el toque */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: background 0.15s ease, transform 0.05s ease;
 }
 
